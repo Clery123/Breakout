@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonLevels;
     private EditText editText;
     private Button buttonScore;
-    public static String playerName;
+    public static String playerName ="Player";
     public static SharedPreferences pref;
 
     private Game game;

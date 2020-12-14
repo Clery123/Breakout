@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Breakout</string>
+    <string name="player">player</string>
 </resources>

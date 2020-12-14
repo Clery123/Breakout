@@ -3,6 +3,7 @@ package com.example.breakout;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,6 +13,8 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +34,8 @@ public class Game extends AppCompatActivity {
     private Ball ball;
     private MediaPlayer dingSound;
     private MediaPlayer paddle;
+    private MediaPlayer wall;
+    private MediaPlayer win;
     public static SharedPreferences.Editor editor;
     private RectF[] rectBric = new RectF[Brick.posLen];
     public static int gameSpeed = 30;
@@ -52,8 +57,8 @@ public class Game extends AppCompatActivity {
         editor = MainActivity.pref.edit();
         dingSound = MediaPlayer.create(this,R.raw.ding);
         paddle = MediaPlayer.create(this,R.raw.paddle);
-     //   editor.putInt("Player", 10);
-
+        wall = MediaPlayer.create(this,R.raw.wall);
+        win = MediaPlayer.create(this,R.raw.win);
         start();
 
     }
@@ -87,14 +92,20 @@ public class Game extends AppCompatActivity {
                         ball.update();
                         if(ball.getRect().right >=BreakoutView.width){
                             int rand_int2 = rand.nextInt(3)+3;
+                            wall.start();
                             ball.xVel = -rand_int2;
                         }
                         if(ball.getRect().left <=0){
+                            wall.start();
                             int rand_int2 = rand.nextInt(3)+3;
                             ball.xVel = rand_int2;
                         }
                         if(ball.getRect().top <=0){
+                            wall.start();
                             ball.yVel = -ball.yVel;
+                        }
+                        if(ball.getRect().bottom>=BreakoutView.height){
+                            onBackPressed();
                         }
                         if(RectF.intersects(breakout.getRect(),ball.getRect())){
                             audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),0);
@@ -134,6 +145,7 @@ public class Game extends AppCompatActivity {
                             }
                         }
                         if(bricLen ==0 ){
+                            win.start();
                             onBackPressed();
 
                         }
@@ -146,8 +158,8 @@ public class Game extends AppCompatActivity {
     }
     public void onBackPressed(){
         timer.cancel();
-        editor.putInt(String.valueOf(Score.index), BreakoutView.score*10);
         Score.index++;
+        editor.putInt(String.valueOf(Score.index), BreakoutView.score*10);
         editor.commit();
         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
         startActivity(intent);

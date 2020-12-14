@@ -13,7 +13,7 @@ public class Ball {
         yVel =3;
         rect = new RectF();
         rect.left+=150;
-        rect.top +=450;
+        rect.top +=500;
     }
     public static RectF getRect(){
         return rect;
