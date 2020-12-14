@@ -119,7 +119,6 @@ public class Game extends AppCompatActivity {
                             if(ball.getRect().left >= breakout.getRect().right-200 &&ball.getRect().left <= breakout.getRect().right){
                                 if(ball.xVel <0)
                                     ReverseX();
-                                    //ball.xVel = -ball.xVel;
                                 ball.yVel = -3;
                             }
                         }
@@ -128,19 +127,18 @@ public class Game extends AppCompatActivity {
                                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),0);
                                 dingSound.start();
                                 if(ball.getRect().right < rectBric[i].left+10 || ball.getRect().left > rectBric[i].right-10){
-                                    System.out.println("X inverted");
                                     ball.xVel = -ball.xVel;
                                     breakout.invisible=i;
                                     rectBric[i] = rectBric[bricLen-1];
                                     bricLen-=1;
+                                    Score.index++;
                                 }
                                 else{
-                                System.out.println("Y inverted");
                                 ball.yVel = -ball.yVel;
                                 breakout.invisible=i;
                                 rectBric[i] = rectBric[bricLen-1];
                                 bricLen-=1;
-
+                                Score.index++;
                                 }
                             }
                         }
