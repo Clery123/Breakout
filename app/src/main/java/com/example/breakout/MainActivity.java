@@ -2,8 +2,11 @@ package com.example.breakout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -19,19 +22,25 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
     private Button buttonPlay;
     private Button buttonLevels;
+    private Button muteSound;
     private EditText editText;
     private Button buttonScore;
     public static String playerName ="Player";
     public static SharedPreferences pref;
-
+    public static boolean mt;
+    Context context;
     private Game game;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pref  = getApplicationContext().getSharedPreferences("MyPref", 0);
+        pref  = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         setContentView(R.layout.menu);
         editText = (EditText)findViewById(R.id.pname);
         editText.setText(playerName);
+        context = this;
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("MyPref",Context.MODE_PRIVATE);
+        mt = sp.getBoolean("muted",false);
+        System.out.println(mt);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -80,6 +89,38 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+        muteSound = findViewById(R.id.mute);
+        muteSound.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sp = getApplicationContext().getSharedPreferences("MyPref",Context.MODE_PRIVATE);
+                mt = sp.getBoolean("muted",false);
+                if(mt){
+                    muteSound.setText("Mute Sounds");
+                    SharedPreferences.Editor edit = pref.edit();
+                    edit.putBoolean("muted",false);
+                    edit.apply();
+                    edit.commit();
+                    mt = sp.getBoolean("muted",false);
+                    System.out.println(mt);
+                }
+                else if(!mt){
+                    muteSound.setText("Unmute Sounds");
+                    SharedPreferences.Editor edit = pref.edit();
+                    edit.putBoolean("muted",true);
+                    edit.apply();
+                    edit.commit();
+                    mt = sp.getBoolean("muted",false);
+                    System.out.println(mt);
+                }
+
+            }
+        });
+        if(mt){
+            muteSound.setText("Unmute Sounds");}
+        else if(!mt)
+            muteSound.setText("Mute Sounds");
     }
 
 
