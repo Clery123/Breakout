@@ -94,7 +94,6 @@ public class Game extends AppCompatActivity {
                     @Override
                     public void run() {
                         breakout.invalidate();
-                        //Colision();
                         ball.update();
                         if(ball.getRect().right >=BreakoutView.width){
                             if(!MainActivity.mt) {
@@ -168,8 +167,10 @@ public class Game extends AppCompatActivity {
     }
     public void onBackPressed(){
         timer.cancel();
-        editor.putInt(String.valueOf(Score.index), BreakoutView.score*10);
+        editor.putString(String.valueOf(Score.index), MainActivity.playerName+": "+BreakoutView.score*10);
+
         Score.index++;
+        editor.putInt("index",Score.index);
         editor.commit();
         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
         startActivity(intent);

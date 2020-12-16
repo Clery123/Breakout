@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pref  = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        pref  = getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         setContentView(R.layout.menu);
         editText = (EditText)findViewById(R.id.pname);
         editText.setText(playerName);
